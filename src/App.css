@@ -1,5 +1,27 @@
 .App {
   text-align: center;
+  background-size: 100% 100%;
+  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  background-image: radial-gradient(
+      80% 80% at 89% 93%,
+      #ff00b38f 0%,
+      #073aff00 100%
+    ),
+    radial-gradient(24% 16% at 31% 30%, #00d4ff96 0%, #073aff00 100%),
+    radial-gradient(30% 30% at 19% 10%, #00ffffff 0%, #073aff00 100%),
+    linear-gradient(
+      308deg,
+      #bb0077ff 0%,
+      #090333ff 22%,
+      #0a0031ff 69%,
+      #067fcfff 99%
+    );
+  min-height: 100vh;
+  color: white;
+}
+
+body {
+  margin-top: -21px;
 }
 
 .App-logo {

@@ -1,0 +1,240 @@
+$goldColor: rgba(255, 215, 0, 1);
+$goldColor50: rgba(255, 215, 0, 0.5);
+$darkGoldColor: #977f00;
+
+$height: 36px;
+$thumbHeight: 25px;
+$trackHeight: 5px;
+
+// colours
+$upperColor: #edf5f9;
+$lowerColor: rgba(231, 56, 39, 1);
+$thumbColor: #ddd;
+$thumbHoverColor: #ccc;
+$upperBackground: linear-gradient(to bottom, $upperColor, $upperColor) 100% 50% /
+  100% $trackHeight no-repeat transparent;
+$lowerBackground: linear-gradient(to bottom, $lowerColor, $lowerColor) 100% 50% /
+  100% $trackHeight no-repeat transparent;
+
+$borderRadius: 6px;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 8px;
+
+  label {
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: rgb(189, 189, 189);
+  }
+
+  &.disabled {
+    opacity: 0.6;
+
+    .inputWrapper {
+      border-color: transparent !important;
+    }
+  }
+}
+
+.inputWrapper {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: $borderRadius;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 15px;
+  min-height: 37px;
+  &:hover {
+    border-color: $goldColor;
+  }
+
+  &.inFocus {
+    border-color: $goldColor;
+    -webkit-box-shadow: 0px 0px 10px 0px $goldColor50;
+    -moz-box-shadow: 0px 0px 10px 0px $goldColor50;
+    box-shadow: 0px 0px 10px 0px $goldColor50;
+  }
+  input {
+    background: none;
+    border: none;
+    color: white;
+    text-align: left;
+    width: 100%;
+    &:hover,
+    &:active,
+    &:focus,
+    &:focus-visible {
+      border: none;
+      outline: none;
+      -moz-appearance: textfield;
+    }
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+input[type="range"] {
+  overflow: hidden;
+  // display: flex;
+  // align-items: center;
+  appearance: none;
+  // max-width: 700px;
+  width: 100%;
+  margin: 0;
+  height: $height;
+  cursor: pointer;
+  position: relative;
+  &:before {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(
+      to right,
+      rgba(78, 247, 52, 1) 0%,
+      rgba(245, 235, 54, 1) 50%,
+      rgba(231, 56, 39, 1) 100%
+    );
+    // z-index: -1;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: $height;
+    // background: $lowerBackground;
+  }
+
+  &::-webkit-slider-thumb {
+    position: relative;
+    appearance: none;
+    height: $thumbHeight;
+    width: $thumbHeight;
+    background: $thumbColor;
+    border-radius: 100%;
+    border: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    // box-shadow: ${makeLongShadow($upperColor, "-10px")};
+    transition: background-color 150ms;
+  }
+
+  // &::-moz-range-track,
+  // &::-moz-range-progress {
+  //   width: 100%;
+  //   height: $height;
+  //   background: $upperBackground;
+  // }
+
+  // &::-moz-range-progress {
+  //   background: $lowerBackground;
+  // }
+
+  &::-moz-range-thumb {
+    appearance: none;
+    margin: 0;
+    height: $thumbHeight;
+    width: $thumbHeight;
+    background: $thumbColor;
+    border-radius: 100%;
+    border: 0;
+    transition: background-color 150ms;
+  }
+
+  &::-ms-track {
+    width: 100%;
+    height: $height;
+    border: 0;
+    /* color needed to hide track marks */
+    color: transparent;
+    background: transparent;
+  }
+
+  // &::-ms-fill-lower {
+  //   background: $lowerBackground;
+  // }
+
+  // &::-ms-fill-upper {
+  //   background: $upperBackground;
+  // }
+
+  &::-ms-thumb {
+    appearance: none;
+    height: $thumbHeight;
+    width: $thumbHeight;
+    background: $thumbColor;
+    border-radius: 100%;
+    border: 0;
+    transition: background-color 150ms;
+    /* IE Edge thinks it can support -webkit prefixes */
+    top: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  &:hover,
+  &:focus {
+    &::-webkit-slider-thumb {
+      background-color: $thumbHoverColor;
+    }
+    &::-moz-range-thumb {
+      background-color: $thumbHoverColor;
+    }
+    &::-ms-thumb {
+      background-color: $thumbHoverColor;
+    }
+  }
+}
+.prefix {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.info {
+  background: rgba(255, 255, 255, 0.3);
+  &:hover,
+  &:focus {
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+.playButton {
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  min-height: 50px;
+  padding: 20px 30px;
+  border-radius: $borderRadius;
+  background-color: $goldColor;
+  width: 100%;
+  align-self: end;
+  cursor: pointer;
+  border: none;
+  border-bottom: 3px solid $darkGoldColor;
+  box-shadow: inset 0px 0px 28px 3px $darkGoldColor;
+  &:hover {
+    border-bottom-width: 2px;
+  }
+  &:active {
+    border-bottom-width: 0px;
+  }
+}

@@ -1,0 +1,52 @@
+.game {
+  /* background: #322b1b; */
+  -webkit-perspective: 800px;
+}
+
+.coin.idle {
+  animation: idleCoin 0.5s ease-out forwards;
+}
+
+.coin.awaiting {
+  animation: awaitingCoin 3s linear infinite;
+}
+
+.coin.headsRes {
+  animation: flipHeads 3s ease-out forwards;
+}
+
+.coin.tailsRes {
+  animation: flipTails 3s ease-out forwards;
+}
+
+@keyframes idleCoin {
+  from {
+    transform: rotateY(0);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+
+@keyframes awaitingCoin {
+  from {
+    transform: rotateY(0);
+  }
+  to {
+    transform: rotateY(1800deg);
+  }
+}
+
+@keyframes flipHeads {
+  from {
+    transform: rotateY(1800deg);
+  }
+  to {
+    transform: rotateY(3600deg);
+  }
+}
+@keyframes flipTails {
+  to {
+    transform: rotateY(3780deg);
+  }
+}
