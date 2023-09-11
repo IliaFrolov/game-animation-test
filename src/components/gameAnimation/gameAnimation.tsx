@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { GameAnimationState } from "../types.ts";
 import "./gameAnimationStyles.scss";
+import "../commonStyles.scss";
 
 export default function GameAnimation({ gameState, gameResult }) {
   //   console.log({ gameState });
@@ -19,6 +20,9 @@ export default function GameAnimation({ gameState, gameResult }) {
     isResultState && gameResult.simulationResult.toString() === "1";
   const resultString = isResultState && gameResult.simulationResult.toString();
   const coinRef = useRef<HTMLInputElement | null>(null);
+  const coinSide1 = coinRef?.current?.children[0];
+  const coinSide2 = coinRef?.current?.children[1];
+
   //   useLayoutEffect
   useEffect(() => {
     const oneTurnRotation = [{ transform: `rotateY(180deg)` }];
@@ -26,10 +30,20 @@ export default function GameAnimation({ gameState, gameResult }) {
       duration: 500,
       iterations: Infinity,
     };
-
-    const makeRotation = (turns = 0) => [
-      { transform: `rotateY(${turns * 180}deg)` },
+    const makeRotationColor = (color) => [
+      // {
+      //   background: color,
+      // },
+      {
+        backgroundColor: "#000",
+      },
     ];
+    const makeRotation = (turns = 0) => [
+      {
+        transform: `rotateY(${turns * 180}deg)`,
+      },
+    ];
+
     const makeTimer = (
       turns = 0,
       endDelay = 0,
@@ -51,14 +65,7 @@ export default function GameAnimation({ gameState, gameResult }) {
 
       const awaitAnimName = "awaitAnim";
       const awaitAnim = anims.find((a) => a.id === awaitAnimName);
-      //   console.log({ initialAnim });
-      //   const infiniteAnim = () => {
-      //     coinRef.current
-      //       ?.animate(makeRotation(1), makeTimer(1, 0))
-      //       .finished.then(() => {
-      //         isAwaitingState && infiniteAnim();
-      //       });
-      //   };
+
       if (isIdleState) {
         console.count("isIdleState");
 
@@ -67,15 +74,15 @@ export default function GameAnimation({ gameState, gameResult }) {
         }
         const idleAnim = anims.find((a) => a.id === "Idle");
         if (!idleAnim) {
-          coinRef.current.animate(makeRotation(3), makeTimer(3));
+          const timer = makeTimer(3);
+          coinRef.current.animate(makeRotation(3), timer);
+          // coinSide1?.animate(makeRotationColor(), timer);
+          // coinSide2?.animate(makeRotationColor(), timer);
+
           if (lastAnim) {
             lastAnim.id = "Idle";
           }
-          // .finished.then(() => {
-          //   lastAnim.id = "Idle";
-          // });
         }
-        // lastAnim.id = "Idle";
       }
       if (isAwaitingState && !awaitAnim) {
         lastAnim.cancel();
@@ -84,58 +91,20 @@ export default function GameAnimation({ gameState, gameResult }) {
         lastAnim.id = awaitAnimName;
       }
       if (isResultingState) {
-        // const anim = async () => {
-        //   await coinRef.current?.animate(makeRotation(5), makeTimer(5, 0));
-        // };
-        // anim();
-        // coinRef.current?.animate(makeRotation(5), makeTimer(5, 0));
-        // const awaitAnim = anims.find((a) => a.id === "awaitAnim");
         console.count("isResultingState");
-
-        console.log({ awaitAnim });
-
         awaitAnim?.updatePlaybackRate(0.3);
-        // lastAnim.updatePlaybackRate(0.5);
       }
-      if (isResultState) {
-        lastAnim.cancel();
-      }
+      // if (isResultState) {
+      //   lastAnim.cancel();
+      // }
       if (isTailResult) {
-        // const anim = async () => {
-        //   await coinRef.current.animate(
-        //     makeRotation(2),
-        //     makeTimer(4, 0, "linear")
-        //   );
-        //   //   lastAnim.finish();
-        // };
-        // anim();
         console.count("isTailResult");
 
-        coinRef.current.animate(
-          makeRotation(2),
-          makeTimer(4, 3000, "linear", "add")
-        );
-        // lastAnim.id = "TailResult";
-        // awaitAnim?.finish();
+        coinRef.current.animate(makeRotation(2), makeTimer(4, 4000, "linear"));
       }
       if (isHeadResult) {
-        // const anim = async () => {
-        //   await coinRef.current.animate(
-        //     makeRotation(1),
-        //     makeTimer(2, 0, "linear")
-        //   );
-        //   //   lastAnim.finish();
-        // };
-        // anim();
         console.count("isHeadResult");
-        coinRef.current.animate(
-          makeRotation(1),
-          makeTimer(2, 3000, "linear", "add")
-        );
-
-        // lastAnim.id = "HeadResult";
-        // awaitAnim?.finish();
-        // awaitAnim?.commitStyles();
+        coinRef.current.animate(makeRotation(1), makeTimer(2, 4000, "linear"));
       }
     }
   }, [
@@ -148,7 +117,7 @@ export default function GameAnimation({ gameState, gameResult }) {
   ]);
 
   return (
-    <div className="">
+    <div className="coinAnimation">
       <div className="">
         <h2>Game Animation</h2>
       </div>

@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from "react";
-import Input, { Info, PlayButton, RangeInput } from "../input/input.tsx";
+import Input, {
+  Info,
+  PlayButton,
+  RangeInput,
+  SideRadio,
+} from "../input/input.tsx";
 import "./betFromStyles.scss";
 
 const BetForm = ({ game, triggerAwaitingState }) => {
@@ -82,17 +87,14 @@ const BetForm = ({ game, triggerAwaitingState }) => {
   const updateSide = (event) => {
     const target = event.target;
     const value = target.checked;
+    console.log({ value });
+
     setSide(value ? 0 : 1);
   };
 
   return (
     <div className="form">
-      {/* <div className="">
-        <h2>Bet Form</h2>
-      </div> */}
-
-      <div className="">
-        {/* <label>Wager</label> */}
+      <div className="fieldGroup">
         <Input
           valuePrefix="$"
           label="Wager"
@@ -108,61 +110,56 @@ const BetForm = ({ game, triggerAwaitingState }) => {
           onChange={updateWager}
         ></Input>
       </div>
+      <div className="fieldGroup">
+        <RangeInput
+          label="Number of Coins"
+          id="numberOfCoins"
+          name="numberOfCoins"
+          min="1"
+          max="10"
+          step="1"
+          placeholder="1"
+          value={numberOfCoins}
+          onChange={updateNumberOfCoins}
+        />
 
-      <div className="">
-        <label>Side (is heads)</label>
-        <input
-          className=""
-          id="isHeads"
-          name="isHeads"
-          type="checkbox"
-          placeholder="true"
-          checked={side === 0}
-          onChange={updateSide}
-        ></input>
+        <RangeInput
+          disabled={numberOfCoins <= 1}
+          label="Number Correct"
+          id="numberCorrect"
+          name="numberCorrect"
+          min="1"
+          max={numberOfCoins}
+          step="1"
+          placeholder="1"
+          value={numberCorrect}
+          onChange={updateNumberCorrect}
+        />
       </div>
-
-      <RangeInput
-        label="Number of Coins"
-        id="numberOfCoins"
-        name="numberOfCoins"
-        min="1"
-        max="10"
-        step="1"
-        placeholder="1"
-        value={numberOfCoins}
-        onChange={updateNumberOfCoins}
-      ></RangeInput>
-      <RangeInput
-        disabled={numberOfCoins <= 1}
-        label="Number Correct"
-        id="numberCorrect"
-        name="numberCorrect"
-        min="1"
-        max={numberOfCoins}
-        step="1"
-        placeholder="1"
-        value={numberCorrect}
-        onChange={updateNumberCorrect}
-      ></RangeInput>
-
-      {validBet ? (
-        <>
-          <Info
-            value={`${multiplier.toFixed(2)} (${(probability * 100).toFixed(
-              2
-            )}%)`}
-            label="Multiplier"
-          />
-          <Info label="Potential Payout" value={potentialPayout.toFixed(2)} />
-        </>
-      ) : (
-        <Info label="Invalid bet" value={invalidReason} />
-      )}
-
-      <PlayButton onClick={validBet ? placeBet : () => {}} disabled={!validBet}>
-        Place Bet
-      </PlayButton>
+      <div className="fieldGroup">
+        {validBet ? (
+          <>
+            <Info
+              value={`${multiplier.toFixed(2)} (${(probability * 100).toFixed(
+                2
+              )}%)`}
+              label="Multiplier"
+            />
+            <Info label="Potential Payout" value={potentialPayout.toFixed(2)} />
+          </>
+        ) : (
+          <Info label="Invalid bet" value={invalidReason} />
+        )}
+      </div>
+      <div className="fieldGroup">
+        <SideRadio label="Side" side={side} setSide={setSide} />
+        <PlayButton
+          onClick={validBet ? placeBet : () => {}}
+          disabled={!validBet}
+        >
+          Place Bet
+        </PlayButton>
+      </div>
     </div>
   );
 };

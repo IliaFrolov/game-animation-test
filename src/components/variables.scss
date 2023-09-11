@@ -1,0 +1,19 @@
+$goldColor: rgba(255, 215, 0, 1);
+$goldColor50: rgba(255, 215, 0, 0.5);
+$darkGoldColor: #977f00;
+
+$height: 36px;
+$thumbHeight: 25px;
+$trackHeight: 5px;
+
+// colours
+$upperColor: #edf5f9;
+$lowerColor: rgba(231, 56, 39, 1);
+$thumbColor: #ddd;
+$thumbHoverColor: #ccc;
+$upperBackground: linear-gradient(to bottom, $upperColor, $upperColor) 100% 50% /
+  100% $trackHeight no-repeat transparent;
+$lowerBackground: linear-gradient(to bottom, $lowerColor, $lowerColor) 100% 50% /
+  100% $trackHeight no-repeat transparent;
+
+$borderRadius: 6px;

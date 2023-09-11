@@ -1,16 +1,27 @@
 import React, { useRef, useState } from "react";
 import "./inputStyles.scss";
 
-const Field = ({ inputRef, label, disabled = false, children }) => {
+const Field = ({
+  inputRef,
+  label,
+  className = "",
+  disabled = false,
+  children,
+}) => {
   return (
-    <div className={`field ${disabled ? "disabled" : ""}`}>
+    <div className={`field ${disabled ? "disabled" : ""} ${className}`}>
       <label onClick={() => inputRef.current?.focus()}>{label}</label>
       {children}
     </div>
   );
 };
 
-const FieldInner = ({ inputRef, inFocus, className = "", children }) => {
+const FieldInner = ({
+  inputRef,
+  inFocus = false,
+  className = "",
+  children,
+}) => {
   return (
     <div
       onClick={() => inputRef.current?.focus()}
@@ -79,18 +90,34 @@ export const Info = ({ value, label }) => {
   const ref = useRef<HTMLInputElement | null>(null);
   return (
     <Field label={label} inputRef={ref}>
-      <FieldInner className="info" inputRef={ref} inFocus={inFocus}>
-        {/* {value && (
-          <>
-            <span className="prefix">{`${value}`}</span>
-          </>
-        )} */}
+      <FieldInner className="info" inputRef={ref}>
         {value}
       </FieldInner>
     </Field>
   );
 };
+export const SideRadio = ({ side, label, setSide, ...props }) => {
+  console.log({ side });
 
+  return (
+    <Field label={label}>
+      <div className="coinSideField">
+        <button
+          className={`coin  ${side === 0 ? "active" : ""}`}
+          onClick={() => setSide(0)}
+        >
+          <div className="tails">0</div>
+        </button>
+        <button
+          className={`coin  ${side === 1 ? "active" : ""}`}
+          onClick={() => setSide(1)}
+        >
+          <div className="heads">1</div>
+        </button>
+      </div>
+    </Field>
+  );
+};
 export const PlayButton = ({ children, ...props }) => {
   return (
     <button type="button" className="playButton" {...props}>
