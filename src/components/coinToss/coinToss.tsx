@@ -13,13 +13,24 @@ import "./coinTossStyles.scss";
 
 export default function CoinTossUx({}) {
   const [game, setGame] = useState();
+  const [coinsNumber, setCoinsNumber] = useState(1);
+  const coinsArr = new Array(coinsNumber).fill("");
+
   const [gameAnimationState, setGameAnimationState] = useState(
-    GameAnimationState.IDLE
+    GameAnimationState.LOADING
   );
   const [lastGameResultEvent, setLastGameResultEvent] = useState(null);
   const [gameHistory, setGameHistory] = useState([]);
   const [betHistory, setBetHistory] = useState([]);
 
+  useEffect(() => {
+    const ready = () =>
+      setTimeout(() => {
+        setGameAnimationState(GameAnimationState.IDLE);
+      }, 1000);
+    ready();
+    // return clearTimeout(ready());
+  }, []);
   const triggerAwaitingState = () => {
     setGameAnimationState(GameAnimationState.AWAITING);
   };
@@ -66,20 +77,43 @@ export default function CoinTossUx({}) {
     gh.push(gameResultEvent);
     setGameHistory(gh);
   };
-  console.log({ game });
+
   return (
     <div className="game">
       <div className="">
         <h1>Coin Toss</h1>
       </div>
-
-      <GameAnimation
-        gameState={gameAnimationState}
-        gameResult={lastGameResultEvent}
-      />
-      <BetForm game={game} triggerAwaitingState={triggerAwaitingState} />
-      <GameHistory gameHistory={gameHistory} />
-      <BetHistory betHistory={betHistory} />
+      <div className="">
+        {GameAnimationState[gameAnimationState].toString()}
+      </div>
+      <div className="">
+        <span>{`Result: `}</span>
+        {lastGameResultEvent?.simulationResult.map((r) => `${r},`)}
+      </div>
+      <div className="coinsWrapper">
+        {coinsArr.map((el, idx) => {
+          return (
+            <GameAnimation
+              key={el + idx}
+              gameState={gameAnimationState}
+              coinResult={lastGameResultEvent?.simulationResult?.[idx]}
+            />
+          );
+        })}
+      </div>
+      {gameAnimationState !== GameAnimationState.LOADING && (
+        <>
+          <BetForm
+            game={game}
+            coinsNumber={coinsNumber}
+            setCoinsNumber={setCoinsNumber}
+            triggerAwaitingState={triggerAwaitingState}
+            gameAvailable={gameAnimationState === GameAnimationState.IDLE}
+          />
+          <GameHistory gameHistory={gameHistory} />
+          <BetHistory betHistory={betHistory} />
+        </>
+      )}
     </div>
   );
 }

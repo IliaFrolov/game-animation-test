@@ -7,10 +7,16 @@ import Input, {
 } from "../input/input.tsx";
 import "./betFromStyles.scss";
 
-const BetForm = ({ game, triggerAwaitingState }) => {
+const BetForm = ({
+  game,
+  coinsNumber: numberOfCoins,
+  setCoinsNumber: setNumberOfCoins,
+  triggerAwaitingState,
+  gameAvailable,
+}) => {
   const [wager, setWager] = useState(1);
   const [side, setSide] = useState(0);
-  const [numberOfCoins, setNumberOfCoins] = useState(1);
+  // const [numberOfCoins, setNumberOfCoins] = useState(1);
   const [numberCorrect, setNumberCorrect] = useState(1);
   const [probability, setProbability] = useState(0);
   const [multiplier, setMultiplier] = useState(0);
@@ -84,18 +90,11 @@ const BetForm = ({ game, triggerAwaitingState }) => {
     setNumberOfCoins(Number(value));
   };
 
-  const updateSide = (event) => {
-    const target = event.target;
-    const value = target.checked;
-    console.log({ value });
-
-    setSide(value ? 0 : 1);
-  };
-
   return (
     <div className="form">
       <div className="fieldGroup">
         <Input
+          disabled={!gameAvailable}
           valuePrefix="$"
           label="Wager"
           className=""
@@ -112,6 +111,7 @@ const BetForm = ({ game, triggerAwaitingState }) => {
       </div>
       <div className="fieldGroup">
         <RangeInput
+          disabled={!gameAvailable}
           label="Number of Coins"
           id="numberOfCoins"
           name="numberOfCoins"
@@ -124,7 +124,7 @@ const BetForm = ({ game, triggerAwaitingState }) => {
         />
 
         <RangeInput
-          disabled={numberOfCoins <= 1}
+          disabled={numberOfCoins <= 1 || !gameAvailable}
           label="Number Correct"
           id="numberCorrect"
           name="numberCorrect"
@@ -152,10 +152,15 @@ const BetForm = ({ game, triggerAwaitingState }) => {
         )}
       </div>
       <div className="fieldGroup">
-        <SideRadio label="Side" side={side} setSide={setSide} />
+        <SideRadio
+          label="Side"
+          side={side}
+          setSide={setSide}
+          disabled={!gameAvailable}
+        />
         <PlayButton
           onClick={validBet ? placeBet : () => {}}
-          disabled={!validBet}
+          disabled={!validBet || !gameAvailable}
         >
           Place Bet
         </PlayButton>

@@ -96,19 +96,19 @@ export const Info = ({ value, label }) => {
     </Field>
   );
 };
-export const SideRadio = ({ side, label, setSide, ...props }) => {
-  console.log({ side });
-
+export const SideRadio = ({ side, label, disabled, setSide }) => {
   return (
     <Field label={label}>
       <div className="coinSideField">
         <button
+          disabled={disabled}
           className={`coin  ${side === 0 ? "active" : ""}`}
           onClick={() => setSide(0)}
         >
           <div className="tails">0</div>
         </button>
         <button
+          disabled={disabled}
           className={`coin  ${side === 1 ? "active" : ""}`}
           onClick={() => setSide(1)}
         >

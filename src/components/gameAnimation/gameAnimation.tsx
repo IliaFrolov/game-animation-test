@@ -3,130 +3,81 @@ import { GameAnimationState } from "../types.ts";
 import "./gameAnimationStyles.scss";
 import "../commonStyles.scss";
 
-export default function GameAnimation({ gameState, gameResult }) {
-  //   console.log({ gameState });
-
+export default function GameAnimation({ gameState, coinResult }) {
+  const isLoadingState = gameState === GameAnimationState.LOADING;
+  const isErrorState = gameState === GameAnimationState.ERROR;
   const isIdleState = gameState === GameAnimationState.IDLE;
-  const isAwaitingState =
-    gameState === GameAnimationState.AWAITING ||
-    gameState === GameAnimationState.RESULTING;
+  const isAwaitingState = gameState === GameAnimationState.AWAITING;
   const isResultingState = gameState === GameAnimationState.RESULTING;
-
   const isResultState = gameState === GameAnimationState.RESULT;
+  const isTailResult = isResultState && coinResult?.toString() === "0";
+  const isHeadResult = isResultState && coinResult?.toString() === "1";
 
-  const isTailResult =
-    isResultState && gameResult.simulationResult.toString() === "0";
-  const isHeadResult =
-    isResultState && gameResult.simulationResult.toString() === "1";
-  const resultString = isResultState && gameResult.simulationResult.toString();
   const coinRef = useRef<HTMLInputElement | null>(null);
-  const coinSide1 = coinRef?.current?.children[0];
-  const coinSide2 = coinRef?.current?.children[1];
+  const coinEL = coinRef.current;
+  const currentAnimationRef = useRef<Animation | null>(null);
 
-  //   useLayoutEffect
   useEffect(() => {
-    const oneTurnRotation = [{ transform: `rotateY(180deg)` }];
-    const coinAwaiting = {
-      duration: 500,
-      iterations: Infinity,
-    };
-    const makeRotationColor = (color) => [
-      // {
-      //   background: color,
-      // },
-      {
-        backgroundColor: "#000",
-      },
-    ];
-    const makeRotation = (turns = 0) => [
-      {
-        transform: `rotateY(${turns * 180}deg)`,
-      },
-    ];
+    const animate = (keyframes, iterations, fromPrev = false) => {
+      if (coinEL) {
+        currentAnimationRef?.current?.pause();
+        let transformStart = getComputedStyle(coinEL).transform;
 
-    const makeTimer = (
-      turns = 0,
-      endDelay = 0,
-      easing = "linear",
-      composite = "replace"
-    ) => ({
-      duration: turns * 500,
-      iterations: 1,
-      fill: "forwards" as FillMode,
-      composite: composite as CompositeOperation,
-      endDelay: endDelay,
-    });
-
-    if (coinRef?.current) {
-      const anims = coinRef.current.getAnimations();
-      console.log({ anims });
-      const lastAnim = anims[anims.length - 1];
-      const initialAnim = !Boolean(anims.length);
-
-      const awaitAnimName = "awaitAnim";
-      const awaitAnim = anims.find((a) => a.id === awaitAnimName);
-
-      if (isIdleState) {
-        console.count("isIdleState");
-
-        if (!initialAnim) {
-          anims.forEach((anim) => anim.cancel());
-        }
-        const idleAnim = anims.find((a) => a.id === "Idle");
-        if (!idleAnim) {
-          const timer = makeTimer(3);
-          coinRef.current.animate(makeRotation(3), timer);
-          // coinSide1?.animate(makeRotationColor(), timer);
-          // coinSide2?.animate(makeRotationColor(), timer);
-
-          if (lastAnim) {
-            lastAnim.id = "Idle";
+        currentAnimationRef?.current?.cancel();
+        currentAnimationRef.current = coinEL.animate(
+          [fromPrev ? { transform: transformStart } : null, ...keyframes],
+          {
+            duration: 1000,
+            easing: "linear",
+            fill: "forwards",
+            iterations: iterations,
           }
-        }
+        );
       }
-      if (isAwaitingState && !awaitAnim) {
-        lastAnim.cancel();
-        console.count("isAwaitingState");
-        coinRef.current?.animate(oneTurnRotation, coinAwaiting);
-        lastAnim.id = awaitAnimName;
-      }
-      if (isResultingState) {
-        console.count("isResultingState");
-        awaitAnim?.updatePlaybackRate(0.3);
-      }
-      // if (isResultState) {
-      //   lastAnim.cancel();
-      // }
-      if (isTailResult) {
-        console.count("isTailResult");
+    };
 
-        coinRef.current.animate(makeRotation(2), makeTimer(4, 4000, "linear"));
-      }
-      if (isHeadResult) {
-        console.count("isHeadResult");
-        coinRef.current.animate(makeRotation(1), makeTimer(2, 4000, "linear"));
-      }
+    if (isErrorState) {
+    }
+    if (isLoadingState) {
+      animate([{ opacity: 0 }], Infinity);
+    }
+    if (isIdleState) {
+      animate([{ transform: "rotateY(360deg)" }], 1);
+    }
+    if (isAwaitingState) {
+      animate([{ transform: "rotateY(360deg)" }], Infinity);
+    }
+    if (isResultingState) {
+      currentAnimationRef.current?.updatePlaybackRate(0.5);
+    }
+    if (isTailResult) {
+      animate([{ transform: `rotateY(${180 * 2}deg)` }], 1, true);
+    }
+    if (isHeadResult) {
+      animate([{ transform: `rotateY(${180 * 3}deg)` }], 1, true);
     }
   }, [
-    isAwaitingState,
-    isHeadResult,
+    isErrorState,
     isIdleState,
-    isResultState,
-    isResultingState,
+    isLoadingState,
     isTailResult,
+    isResultingState,
+    isHeadResult,
+    isAwaitingState,
+    coinEL,
   ]);
 
   return (
     <div className="coinAnimation">
-      <div className="">
+      {/* <div className="">
         <h2>Game Animation</h2>
-      </div>
+      </div> */}
       <div ref={coinRef} className="coin">
         <div className="tails">0</div>
         <div className="heads">1</div>
       </div>
-      <div className="">{GameAnimationState[gameState].toString()}</div>
-      <div className="">{resultString}</div>
+      {/* <div className="">{GameAnimationState[gameState].toString()}</div> */}
+      {/* <div className="">{resultString}</div>  */}
     </div>
   );
 }

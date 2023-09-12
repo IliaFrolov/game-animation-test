@@ -184,13 +184,25 @@ input[type="range"] {
   align-self: end;
   cursor: pointer;
   border: none;
-  border-bottom: 3px solid $darkGoldColor;
+  margin-bottom: 3px;
   box-shadow: inset 0px 0px 28px 3px $darkGoldColor;
+  position: relative;
+
   &:hover {
-    border-bottom-width: 2px;
+    box-shadow: inset 0px 0px 10px 3px $darkGoldColor;
   }
   &:active {
-    border-bottom-width: 0px;
+    box-shadow: inset 0px 0px 5px 3px $darkGoldColor;
+  }
+  &:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+    &:hover {
+      box-shadow: inset 0px 0px 28px 3px $darkGoldColor;
+    }
+    &:active {
+      box-shadow: inset 0px 0px 28px 3px $darkGoldColor;
+    }
   }
 }
 .coinSideField {
@@ -199,9 +211,9 @@ input[type="range"] {
   .coin {
     padding: 0;
     border-style: solid;
-    border-color: transparent;
     padding: 3px;
     background: transparent;
+    border: 2px solid transparent;
     cursor: pointer;
     &:active {
       border-style: solid;

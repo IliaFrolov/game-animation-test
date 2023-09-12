@@ -4,3 +4,11 @@
   flex-direction: column;
   align-items: center;
 }
+.coinsWrapper {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  padding: 30px;
+  justify-content: space-around;
+}

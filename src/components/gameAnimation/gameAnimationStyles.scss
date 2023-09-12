@@ -1,6 +1,7 @@
 .coinAnimation {
   .coin {
     -webkit-transform-style: preserve-3d;
+    z-index: 5;
   }
   .coin div {
     position: absolute;
